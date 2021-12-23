@@ -1,0 +1,42 @@
+:host {
+  >div {
+    // padding: 1rem;
+
+    >* {
+      padding: 1rem;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .mat-selection-list {
+      border: 1px solid #00000055;
+      flex: 1 1 0;
+      min-width: 234px;
+      max-height: 400px;
+    }
+
+    >div {
+      flex: 1 1 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      justify-content: flex-end;
+      gap: 1rem;
+
+      .mat-form-field {
+        flex-basis: 100%;
+      }
+
+
+      &>div {
+        display: flex;
+        gap: 1rem;
+      }
+    }
+  }
+
+}

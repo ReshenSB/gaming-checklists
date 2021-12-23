@@ -1,0 +1,66 @@
+<div>
+  <!-- <div>
+    <button mat-button (click)="accordion.openAll()">Expand All</button>
+    <button mat-button (click)="accordion.closeAll()">Collapse All</button>
+    <button mat-button (click)="log()">Add New</button>
+  </div> -->
+
+  <form [formGroup]="newGameForm" (submit)="formSubmit()">
+    <mat-selection-list [multiple]="false" formControlName="game" (selectionChange)="formGameChange()">
+      <mat-list-option *ngFor="let game of gamesAvailable" [value]="game">
+        {{game}}
+      </mat-list-option>
+    </mat-selection-list>
+
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Playthrough</mat-label>
+        <input type="email" matInput formControlName="playthrough" placeholder="Ex. Final Fanasy X (PS2)">
+        <mat-error *ngIf="newGameForm.get('playthrough')?.hasError('required')">
+          Playthrough is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Start Date</mat-label>
+        <input matInput formControlName="dateStarted" [matDatepicker]="picker">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <div>
+        <button mat-flat-button type="submit" color="primary" [disabled]="newGameForm.invalid">Add</button>
+        <button mat-flat-button type="reset" color="primary">Reset</button>
+      </div>
+    </div>
+  </form>
+  <!-- <hr>
+  <p>
+    newGameForm: {{ newGameForm.get('game')?.valid }}
+    newGameForm: {{ newGameForm.value | json }}
+  </p> -->
+  <div>
+    <mat-accordion multi>
+      <mat-expansion-panel *ngFor="let game of savedGamesData | keyvalue">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ game.key }}
+          </mat-panel-title>
+          <!-- <mat-panel-description> -->
+          <!-- Type your name and age -->
+          <!-- <mat-icon>account_circle</mat-icon> -->
+          <!-- </mat-panel-description> -->
+        </mat-expansion-panel-header>
+
+        <mat-action-list>
+          <button mat-list-item *ngFor="let playthrough of game.value" (click)="log()">
+            <mat-icon mat-list-icon>note</mat-icon>
+            <div mat-line>{{ playthrough.name }}</div>
+            <div mat-line>Started: {{ playthrough.dateStarted | date }}</div>
+            <div mat-line>Updated: {{ playthrough.dateStarted | date }}</div>
+          </button>
+        </mat-action-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>
