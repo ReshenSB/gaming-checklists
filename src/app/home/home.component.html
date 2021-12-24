@@ -15,8 +15,8 @@
     <div>
       <mat-form-field appearance="fill">
         <mat-label>Playthrough</mat-label>
-        <input type="email" matInput formControlName="playthrough" placeholder="Ex. Final Fanasy X (PS2)">
-        <mat-error *ngIf="newGameForm.get('playthrough')?.hasError('required')">
+        <input type="email" matInput formControlName="name" placeholder="Ex. Final Fanasy X (PS2)">
+        <mat-error *ngIf="newGameForm.get('name')?.hasError('required')">
           Playthrough is <strong>required</strong>
         </mat-error>
       </mat-form-field>
@@ -53,12 +53,17 @@
         </mat-expansion-panel-header>
 
         <mat-action-list>
-          <button mat-list-item *ngFor="let playthrough of game.value" (click)="log()">
-            <mat-icon mat-list-icon>note</mat-icon>
-            <div mat-line>{{ playthrough.name }}</div>
-            <div mat-line>Started: {{ playthrough.dateStarted | date }}</div>
-            <div mat-line>Updated: {{ playthrough.dateStarted | date }}</div>
-          </button>
+          <div *ngFor="let playthrough of game.value">
+            <button mat-list-item >
+              <mat-icon mat-list-icon>note</mat-icon>
+              <div mat-line [title]="playthrough.name">{{ playthrough.name }}</div>
+              <div mat-line [title]="'Started: ' + playthrough.dateStarted | date ">Started: {{ playthrough.dateStarted | date }}</div>
+              <div mat-line [title]="'Updated: ' + playthrough.dateUpdated | date ">Updated: {{ playthrough.dateUpdated | date }}</div>
+            </button>
+            <button mat-button (click)="deletePlaythrough(playthrough)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
         </mat-action-list>
       </mat-expansion-panel>
     </mat-accordion>

@@ -1,6 +1,6 @@
 export interface SavedGames {
     game: string;
-    playthrough: string;
+    name: string;
     dateStarted?: Date;
     dateUpdated?: Date;
 }

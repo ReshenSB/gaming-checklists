@@ -39,4 +39,20 @@
     }
   }
 
+  .mat-action-list>div {
+    display: flex;
+    align-content: center;
+
+    .mat-list-item {
+      flex: 1 1 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .mat-button{
+      padding: 0 8px;
+      min-width: 40px;
+    }
+  }
+
+
 }

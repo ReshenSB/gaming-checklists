@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
 
   public newGameForm: FormGroup = new FormGroup({
     game: new FormControl(null, [Validators.required]),
-    playthrough: new FormControl(null, [Validators.required]), // Validator to check if name taken
+    name: new FormControl(null, [Validators.required]), // Validator to check if name taken
     dateStarted: new FormControl(null, [Validators.required]),
     dateUpdated: new FormControl(null),
   })
@@ -32,46 +32,52 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     // Get data for expansion panel
-    this.savedGames = this.appService.getSavedGames();
-    for (const savedGame of this.savedGames) {
-      if (this.savedGamesData[savedGame.game] === undefined) {
-        this.savedGamesData[savedGame.game] = [];
-      }
-      this.savedGamesData[savedGame.game].push({
-        name: savedGame.playthrough,
-        dateStarted: savedGame.dateStarted
-      })
-    }
-
+    this.getSavedGamesData();
     // Get data game selcetion
     this.gamesAvailable = this.appService.getGames();
   }
 
-  log() {
-
+  async getSavedGamesData() {
+    this.savedGames = await this.appService.getSavedGames();
+    console.log(this.savedGames)
+    this.savedGamesData = {};
+    for (const savedGame of this.savedGames) {
+      if (this.savedGamesData[savedGame.game] === undefined) {
+        this.savedGamesData[savedGame.game] = [];
+      }
+      this.savedGamesData[savedGame.game].push(savedGame)
+    }
   }
 
   public formGameChange(): void {
     const game = this.newGameForm.value.game[0];
-    const playthrough = this.newGameForm.value.playthrough;
-    console.log(!!playthrough, playthrough !== game);
+    const playthrough = this.newGameForm.value.name;
 
     if (!!playthrough && playthrough !== this.previousGameSelection) {
       this.previousGameSelection = game;
       return;
     }
     this.previousGameSelection = game;
-    this.newGameForm.get('playthrough')?.setValue(game);
+    this.newGameForm.get('name')?.setValue(game);
   }
 
   public formSubmit(): void {
-    if (this.newGameForm.invalid) {
-      return;
-    }
+    if (this.newGameForm.invalid) { return; }
     this.newGameForm.get('dateUpdated')?.setValue(new Date());
-    const newPlaythrough = this.newGameForm.value
+    const newPlaythrough = this.newGameForm.value;
     newPlaythrough.game = newPlaythrough.game[0]
-    console.log(newPlaythrough)
-    document.querySelector('form')?.reset()
+    this.appService.addPlaythrough(newPlaythrough);
+    document.querySelector('form')?.reset();
+    this.getSavedGamesData();
+  }
+
+  public deletePlaythrough(playthrough: SavedGames): void {
+    console.log(playthrough)
+    this.appService.deletePlaythrough(playthrough);
+    this.getSavedGamesData();
+  }
+
+  public openPlaythrough(playthrough: SavedGames): void {
+    
   }
 }
