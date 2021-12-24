@@ -1,0 +1,78 @@
+<div *ngIf="details.length !== 0">
+  <div class="title-area">
+    <h1>{{ savedGame.game }}</h1>
+    <h2>{{ savedGame.name }}</h2>
+    <p>
+      Started: {{ savedGame.dateStarted | date }}
+      <br />
+      Updated: {{ savedGame.dateUpdated | date }}
+    </p>
+  </div>
+  <!-- {{ details | json }} -->
+  <ng-container *ngIf="!category">
+    <div class="card-container">
+      <ng-container *ngFor="let detail of details">
+        <mat-card>
+          <mat-card-title>{{ detail.category }}</mat-card-title>
+          <mat-card-subtitle>Progress: {{detail.progress | percent }}</mat-card-subtitle>
+          <mat-card-content>
+            <p>This card has divider and indeterminate progress as footer</p>
+            <!-- <p></p> -->
+          </mat-card-content>
+          <!-- <mat-divider inset></mat-divider> -->
+          <mat-card-actions>
+            <button mat-flat-button role="button" type="button" color="primary"
+              (click)="changeCategory(detail.category)">Edit</button>
+            <!-- <button mat-button>SHARE</button> -->
+          </mat-card-actions>
+          <mat-card-footer>
+            <mat-progress-bar mode="determinate" color="primary" [value]="detail.progress * 100"></mat-progress-bar>
+          </mat-card-footer>
+        </mat-card>
+      </ng-container>
+    </div>
+
+    <div class="action-items">
+      <button mat-flat-button role="navigation" type="button" color="primary" routerLink="/">Back</button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="category">
+    <!-- {{ details[categoryIndex] | json }} -->
+
+    <div class="form-card-container">
+      <ng-container *ngFor="let item of details[categoryIndex].items">
+        <mat-card>
+          <mat-card-title>{{ item.name }}</mat-card-title>
+          <mat-card-subtitle>{{ item.description }}</mat-card-subtitle>
+          <mat-card-content>
+            <!-- {{ item.value | json}} -->
+            <ng-container *ngFor="let val of item.value | keyvalue">
+              <!-- {{details[categoryIndex].fields[val.key]}} -->
+              <ng-container [ngSwitch]="details[categoryIndex].fields[val.key]">
+                <div *ngSwitchDefault></div>
+                <div *ngSwitchCase="'checkbox'">
+                  <mat-checkbox [(ngModel)]="item.value[val.key]">{{val.key}}</mat-checkbox>
+                </div>
+              </ng-container>
+              <!-- {{val.key }} -->
+            </ng-container>
+            <!-- <p>This card has divider and indeterminate progress as footer</p> -->
+            <!-- <p></p> -->
+          </mat-card-content>
+          <!-- <mat-divider inset></mat-divider> -->
+          <!-- <mat-card-actions>
+            
+            <button mat-button>SHARE</button>
+          </mat-card-actions> -->
+          <mat-card-footer>
+            <!-- <mat-progress-bar mode="determinate" color="primary" [value]="detail.progress * 100"></mat-progress-bar> -->
+          </mat-card-footer>
+        </mat-card>
+      </ng-container>
+    </div>
+
+    <div class="action-items">
+      <button mat-flat-button role="button" type="button" color="primary" (click)="changeCategory('')">Back</button>
+    </div>
+  </ng-container>
+</div>

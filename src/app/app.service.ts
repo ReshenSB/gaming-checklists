@@ -1,12 +1,16 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SavedGames } from './app.interface';
+import { Observable } from 'rxjs';
+import { GameData, SavedGames } from './app.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
 
-  constructor() {
+  constructor(
+    private http: HttpClient
+  ) {
     if (!window.indexedDB) {
       console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
     } else {
@@ -21,6 +25,14 @@ export class AppService {
           .createIndex('playthroughIndex', ['game', 'name'], { unique: true });
       }
     }
+  }
+
+  getGames(): string[] {
+    return [
+      'Skyrim',
+      // 'Final Fantasy X',
+      // 'Final Fantasy X-2',
+    ]
   }
 
   async getSavedGames(): Promise<SavedGames[]> {
@@ -45,12 +57,34 @@ export class AppService {
     });
   }
 
-  getGames(): string[] {
-    return [
-      'Skyrim',
-      'Final Fantasy X',
-      'Final Fantasy X-2',
-    ]
+
+  async getSavedGameData(playthrough: SavedGames): Promise<{key:number; value:SavedGames}> {
+    return await new Promise((resolve, reject) => {
+      const request = indexedDB.open('game_data', 1);
+      request.onsuccess = (ev: any) => {
+        const db: IDBDatabase = ev.target.result;
+        const txn = db.transaction('playthroughs', 'readonly');
+        const store = txn.objectStore('playthroughs');
+
+        const query = store.index('playthroughIndex').getKey([playthrough.game, playthrough.name])
+
+        // handle success case
+        query.onsuccess = (event: any) => {
+          const key = event.target.result
+          store.get(key).onsuccess = (value: any) => {
+            resolve({ key, value: value.target.result })
+          }
+          // console.log(key, value);
+          // resolve();
+        }
+
+        // handle the error case
+        query.onerror = (event: any) => reject(event.target.error);
+
+        // Close the database once the transaction completes
+        txn.oncomplete = () => db.close();
+      }
+    });
   }
 
   addPlaythrough(playthrough: SavedGames): void {
@@ -96,5 +130,9 @@ export class AppService {
       txn.oncomplete = () => db.close();
     }
   };
+
+  getGameDetails(game: string): Observable<GameData[]> {
+    return this.http.get<GameData[]>(`./assets/checklists/${game}.json`)
+  }
 
 }

@@ -54,7 +54,7 @@
 
         <mat-action-list>
           <div *ngFor="let playthrough of game.value">
-            <button mat-list-item >
+            <button mat-list-item (click)="openPlaythrough(playthrough)">
               <mat-icon mat-list-icon>note</mat-icon>
               <div mat-line [title]="playthrough.name">{{ playthrough.name }}</div>
               <div mat-line [title]="'Started: ' + playthrough.dateStarted | date ">Started: {{ playthrough.dateStarted | date }}</div>

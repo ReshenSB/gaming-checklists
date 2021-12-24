@@ -5,6 +5,7 @@ import { MatAccordion } from '@angular/material/expansion';
 import { AppService } from '../app.service';
 import { SavedGames } from '../app.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,8 @@ export class HomeComponent implements OnInit {
   })
 
   constructor(
-    private appService: AppService
+    private appService: AppService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -78,6 +80,10 @@ export class HomeComponent implements OnInit {
   }
 
   public openPlaythrough(playthrough: SavedGames): void {
-    
+    const queryParams = {
+      game: playthrough.game,
+      name: playthrough.name
+    }
+    this.router.navigate(['overview'], { queryParams })
   }
 }
