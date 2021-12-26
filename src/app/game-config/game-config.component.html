@@ -1,0 +1,35 @@
+<div>
+    <form [formGroup]="jsonForm">
+        <mat-form-field appearance="fill">
+            <mat-label>Category</mat-label>
+            <input matInput formControlName="category">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <input matInput formControlName="description">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Field Label</mat-label>
+            <input matInput [(ngModel)]="fieldLabel" [ngModelOptions]="{standalone: true}">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Field Type</mat-label>
+            <mat-select [(ngModel)]="fieldType" [ngModelOptions]="{standalone: true}">
+                <mat-option value="checkbox">Checkbox</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-flat-button role="button" type="button" color="primary" (click)="addLabel()">Add Label</button>
+        <button mat-flat-button role="button" type="button" color="primary" (click)="resetLabel()">Reset Label</button>
+        <mat-form-field appearance="fill">
+            <mat-label>Textarea</mat-label>
+            <textarea matInput formControlName="items"></textarea>
+        </mat-form-field>
+        <button mat-flat-button role="button" type="button" color="primary" [cdkCopyToClipboard]="outputString">Copy</button>
+        <button mat-flat-button role="button" type="reset" color="primary">Reset</button>
+    </form>
+    <div>
+        <code>
+            {{ output | json }}
+        </code>
+    </div>
+</div>

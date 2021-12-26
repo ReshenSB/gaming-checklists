@@ -1,0 +1,20 @@
+:host {
+    >div {
+        >* {
+            padding: 1rem;
+        }
+    }
+
+    form>* {
+        margin-bottom: 8px;
+    }
+
+    .mat-form-field {
+        width: 100%;
+    }
+
+    form .mat-flat-button:not(:first-of-type) {
+        float: right;
+        margin: 8px;
+    }
+}
