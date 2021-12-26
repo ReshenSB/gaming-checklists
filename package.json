@@ -4,8 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --output-hashing=none",
     "watch": "ng build --watch --configuration development",
+    "package": "cd dist/gaming_checklists && type runtime.js polyfills.js main.js > bundle.js",
     "test": "ng test"
   },
   "private": true,
