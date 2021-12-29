@@ -10,6 +10,7 @@ export interface GameDataItems {
     name: string;
     description: string;
     value: { [key: string]: any };
+    hidden?: boolean;
 }
 
 export interface GameData {
@@ -18,5 +19,6 @@ export interface GameData {
     progress: number;
     fields: { [key: string]: "checkbox" };
     items: GameDataItems[];
+    hidden?: boolean;
 }
 

@@ -1,4 +1,4 @@
-<div *ngIf="details.length !== 0">
+<div #CategorySelection *ngIf="details.length !== 0">
   <div class="title-area">
     <h1>{{ savedGame.game }}</h1>
     <h2>{{ savedGame.name }}</h2>
@@ -7,12 +7,21 @@
       <br />
       Updated: {{ savedGame.dateUpdated | date }}
     </p>
+    <div class="action-items">
+      <input class="hidden" type="file" #FileUpload>
+      <button mat-flat-button role="button" type="button" color="primary" (click)="showHidden = !showHidden">{{
+        showHidden
+        ? 'Hide hidden' : 'Show hidden' }}</button>
+        <button mat-flat-button role="button" type="button" color="primary" (click)="save()">Save</button>
+        <button mat-flat-button role="button" type="button" color="primary" (click)="download()">Download</button>
+        <button mat-flat-button role="button" type="button" color="primary" (click)="upload()">Upload</button>
+    </div>
   </div>
   <!-- {{ details | json }} -->
   <ng-container *ngIf="!category">
     <div class="card-container">
       <ng-container *ngFor="let detail of details">
-        <mat-card>
+        <mat-card [class.d-none]="!showHidden && detail.hidden" [class.d-opacity]="detail.hidden">
           <mat-card-title>{{ detail.category }}</mat-card-title>
           <mat-card-subtitle>Progress: {{detail.progress | percent }}</mat-card-subtitle>
           <mat-card-content>
@@ -21,6 +30,11 @@
           </mat-card-content>
           <!-- <mat-divider inset></mat-divider> -->
           <mat-card-actions>
+            <button mat-icon-button role="button" type="button" color="primary"
+              (click)="detail.hidden = !detail.hidden">
+              <mat-icon>{{detail.hidden ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <button mat-flat-button role="button" type="button" color="primary" (click)="save()">Save</button>
             <button mat-flat-button role="button" type="button" color="primary"
               (click)="changeCategory(detail.category)">Edit</button>
             <!-- <button mat-button>SHARE</button> -->
@@ -41,7 +55,7 @@
 
     <div class="form-card-container">
       <ng-container *ngFor="let item of details[categoryIndex].items">
-        <mat-card>
+        <mat-card [class.d-none]="!showHidden && item.hidden" [class.d-opacity]="item.hidden">
           <mat-card-title>{{ item.name }}</mat-card-title>
           <mat-card-subtitle>{{ item.description }}</mat-card-subtitle>
           <mat-card-content>
@@ -61,6 +75,10 @@
           </mat-card-content>
           <!-- <mat-divider inset></mat-divider> -->
           <mat-card-actions>
+            <button mat-icon-button role="button" type="button" color="primary" (click)="item.hidden = !item.hidden">
+              <mat-icon>{{item.hidden ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <button mat-flat-button role="button" type="button" color="primary" (click)="save()">Save</button>
             <button mat-flat-button role="button" type="button" color="primary"
               (click)="changeCategory('')">Back</button>
           </mat-card-actions>

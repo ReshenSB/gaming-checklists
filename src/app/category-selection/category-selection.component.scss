@@ -5,6 +5,10 @@
         }
     }
 
+    .hidden {
+        display: none;
+    }
+
     .title-area {
         h1 {
             margin-bottom: 0px;
@@ -26,6 +30,14 @@
             display: flex;
             flex-direction: column;
 
+            &.d-none {
+                display: none;
+            }
+    
+            &.d-opacity {
+                opacity: 0.4;
+            }
+
             .mat-card-content {
                 flex: 1 1 100%;
             }
@@ -34,14 +46,16 @@
                 display: flex;
                 flex-direction: row;
                 justify-content: flex-end;
+                gap: 1rem;
             }
         }
     }
-    
+
     .form-card-container {
         white-space: pre-wrap;
         text-overflow: ellipsis;
         overflow: hidden;
+
         .mat-card-subtitle {
             flex: 1 1 100%;
         }

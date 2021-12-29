@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { GameData, SavedGames } from '../app.interface';
@@ -10,11 +10,18 @@ import { AppService } from '../app.service';
   styleUrls: ['./category-selection.component.scss']
 })
 export class CategorySelectionComponent implements OnInit {
+  @ViewChild('FileUpload')
+  fileUpload!: ElementRef<HTMLInputElement>;
+
   savedGame!: SavedGames;
   details: GameData[] = [];
   category = '';
   categoryIndex: number = 0;
   key = 0;
+  showHidden = false;
+
+  cardHeight!: number;
+  formCardHeight!: number;
 
   constructor(
     private appService: AppService,
@@ -35,12 +42,12 @@ export class CategorySelectionComponent implements OnInit {
     const details = localStorage.getItem(this.key.toString());
     this.details = details !== null ? JSON.parse(details) : await firstValueFrom(this.appService.getGameDetails(this.savedGame.game));
     this.calculateProgress();
-    // this.details[0].items = this.details[0].items.map((item: any) => Object.assign(item, { "value": { "obtained": false } }))
+    // this.details[0].items = this.details[0].items.map((item: any) => Object.assign(item, { 'value': { 'obtained': false } }))
     // console.log(savedGame)
     // console.log(this.details)
   }
 
-  calculateProgress(): void {
+  private calculateProgress(): void {
     for (const detail of this.details) {
       detail.progress = 0;
       let totalProgress = 0;
@@ -61,17 +68,50 @@ export class CategorySelectionComponent implements OnInit {
       }
       detail.progress = totalLength === 0 ? 0 : totalProgress / totalLength;
     }
-    localStorage.setItem(this.key.toString(), JSON.stringify(this.details))
+    this.save();
   }
 
-  changeCategory(category: string): void {
+  public changeCategory(category: string): void {
     this.calculateProgress();
-    this.category = '';
     if (category === '') {
+      this.formCardHeight = window.scrollY;
+      this.category = '';
+      window.scrollTo(0, this.cardHeight || 0);
       return;
     }
+    this.cardHeight = window.scrollY;
     this.categoryIndex = this.details.findIndex((item) => item.category === category);
     this.category = category;
+    window.scrollTo(0, this.formCardHeight || 0);
+  }
+
+  public save(customValue?: string): void {
+    if (customValue !== undefined) {
+      localStorage.setItem(this.key.toString(), customValue);
+      this.details = JSON.parse(customValue);
+      return;
+    }
+    localStorage.setItem(this.key.toString(), JSON.stringify(this.details));
+  }
+
+  public download(): void {
+    this.save();
+    var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.details));
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute('href', dataStr);
+    downloadAnchorNode.setAttribute('download', this.savedGame.name + '.json');
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  }
+
+  public upload(): void {
+    this.fileUpload.nativeElement.oninput = (ev: Event) => {
+      if (this.fileUpload.nativeElement.files?.length === 1) {
+        this.fileUpload.nativeElement.files[0].text().then((val) => this.save(val));
+      }
+    }
+    this.fileUpload.nativeElement.click();
   }
 
 }
