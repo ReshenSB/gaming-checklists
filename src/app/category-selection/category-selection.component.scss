@@ -33,7 +33,7 @@
             &.d-none {
                 display: none;
             }
-    
+
             &.d-opacity {
                 opacity: 0.4;
             }
@@ -63,7 +63,12 @@
 
     .action-items {
         display: flex;
+        flex-wrap: wrap;
         justify-content: flex-end;
         gap: 1rem;
+
+        >* {
+            flex: 1 1 120px;
+        }
     }
 }

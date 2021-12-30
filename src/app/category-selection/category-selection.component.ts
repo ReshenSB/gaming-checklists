@@ -76,12 +76,14 @@ export class CategorySelectionComponent implements OnInit {
     if (category === '') {
       this.formCardHeight = window.scrollY;
       this.category = '';
+      this.cdr.detectChanges();
       window.scrollTo(0, this.cardHeight || 0);
       return;
     }
     this.cardHeight = window.scrollY;
     this.categoryIndex = this.details.findIndex((item) => item.category === category);
     this.category = category;
+    this.cdr.detectChanges();
     window.scrollTo(0, this.formCardHeight || 0);
   }
 

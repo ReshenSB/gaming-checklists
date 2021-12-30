@@ -30,8 +30,9 @@ export class AppService {
   getGames(): string[] {
     return [
       'Skyrim',
-      // 'Final Fantasy X',
-      // 'Final Fantasy X-2',
+      'Rune Factory 4 Special Edition',
+      'Final Fantasy X',
+      'Final Fantasy X-2',
     ]
   }
 
